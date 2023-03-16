@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 DIFF_PROMPT = "Generate a succinct summary of the following code changes:"
-COMMIT_MSG_PROMPT = "Using no more than 5000 characters, generate a github pull request summary from these summaries:"
+COMMIT_MSG_PROMPT = "Using no more than 5000 characters, generate a github pull request title and summary (in markdown format) from these summaries:"
 PROMPT_CUTOFF = 10000
 openai.organization = os.getenv("OPENAI_ORG_ID")
 openai.api_key = os.environ["OPENAI_API_KEY"]
