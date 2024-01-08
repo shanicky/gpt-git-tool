@@ -16,6 +16,9 @@ COMMIT_MSG_PROMPT = (
 PROMPT_CUTOFF = 10000
 openai.organization = os.getenv("OPENAI_ORG_ID")
 openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_base = os.environ["OPENAI_API_BASE"]
+
+
 
 
 def get_diff(ignore_whitespace=True):
@@ -75,7 +78,7 @@ def assemble_diffs(parsed_diffs, cutoff):
 
 async def complete(prompt):
     completion_resp = await openai.ChatCompletion.acreate(
-        model="gpt-3.5-turbo",
+        model="gpt-4-1106-preview",
         messages=[{"role": "user", "content": prompt[: PROMPT_CUTOFF + 100]}],
         max_tokens=128,
     )

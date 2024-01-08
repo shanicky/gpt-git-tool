@@ -10,10 +10,11 @@ COMMIT_MSG_PROMPT = "Using no more than 5000 characters, generate a github pull 
 PROMPT_CUTOFF = 10000
 openai.organization = os.getenv("OPENAI_ORG_ID")
 openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_base = os.environ["OPENAI_API_BASE"]
 
 
 def complete(prompt):
-    completion_resp = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+    completion_resp = openai.ChatCompletion.create(model="gpt-4-1106-preview",
                                                    messages=[{
                                                        "role":
                                                        "user",
