@@ -12,7 +12,6 @@ openai.organization = os.getenv("OPENAI_ORG_ID")
 openai.api_key = os.environ["OPENAI_API_KEY"]
 openai.api_base = os.environ["OPENAI_API_BASE"]
 
-
 def complete(prompt):
     completion_resp = openai.ChatCompletion.create(model="gpt-4-1106-preview",
                                                    messages=[{

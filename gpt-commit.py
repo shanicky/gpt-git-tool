@@ -18,9 +18,6 @@ openai.organization = os.getenv("OPENAI_ORG_ID")
 openai.api_key = os.environ["OPENAI_API_KEY"]
 openai.api_base = os.environ["OPENAI_API_BASE"]
 
-
-
-
 def get_diff(ignore_whitespace=True):
     arguments = [
         "git",
