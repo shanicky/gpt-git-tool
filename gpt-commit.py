@@ -10,8 +10,8 @@ import openai
 
 DIFF_PROMPT = "Generate a succinct summary of the following code changes:"
 COMMIT_MSG_PROMPT = (
-    "Using no more than 50 characters, "
-    "generate a descriptive commit message from these summaries:"
+    "Using no more than 100 characters, "
+    "generate a descriptive commit message from these code summaries:"
 )
 PROMPT_CUTOFF = 10000
 openai.organization = os.getenv("OPENAI_ORG_ID")
@@ -75,7 +75,7 @@ def assemble_diffs(parsed_diffs, cutoff):
 
 async def complete(prompt):
     completion_resp = await openai.ChatCompletion.acreate(
-        model="gpt-4-1106-preview",
+        model="gpt-4-turbo-preview",
         messages=[{"role": "user", "content": prompt[: PROMPT_CUTOFF + 100]}],
         max_tokens=128,
     )
