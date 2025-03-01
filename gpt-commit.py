@@ -10,13 +10,13 @@ import openai
 
 DIFF_PROMPT = "Generate a succinct summary of the following code changes:"
 COMMIT_MSG_PROMPT = (
-    "Using no more than 50 characters, "
-    "generate a descriptive commit message from these summaries:"
+    "Using no more than 100 characters, "
+    "generate a descriptive commit message from these code summaries:"
 )
 PROMPT_CUTOFF = 10000
 openai.organization = os.getenv("OPENAI_ORG_ID")
 openai.api_key = os.environ["OPENAI_API_KEY"]
-
+openai.api_base = os.environ["OPENAI_API_BASE"]
 
 def get_diff(ignore_whitespace=True):
     arguments = [
@@ -75,7 +75,8 @@ def assemble_diffs(parsed_diffs, cutoff):
 
 async def complete(prompt):
     completion_resp = await openai.ChatCompletion.acreate(
-        model="gpt-3.5-turbo",
+        model="claude-3-7-sonnet-20250219",
+        #model="claude-3-5-sonnet-20240620",
         messages=[{"role": "user", "content": prompt[: PROMPT_CUTOFF + 100]}],
         max_tokens=128,
     )
@@ -106,7 +107,7 @@ async def generate_commit_message(diff):
 
 def commit(message):
     # will ignore message if diff is empty
-    return subprocess.run(["git", "commit", "--message", message, "--edit"]).returncode
+    return subprocess.run(["git", "commit", "--message", message, "--edit", "-v", "-s"]).returncode
 
 
 def parse_args():
