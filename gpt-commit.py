@@ -6,7 +6,12 @@ import os
 import subprocess
 import sys
 
-import openai
+from openai import AsyncOpenAI
+
+openai_client = AsyncOpenAI(api_key=os.environ["OPENAI_API_KEY"],
+                            base_url=os.environ["OPENAI_API_BASE"])
+
+MODEL = os.environ.get("MODEL_NAME", "gpt-4o-mini")
 
 DIFF_PROMPT = "Generate a succinct summary of the following code changes:"
 COMMIT_MSG_PROMPT = (
@@ -14,9 +19,7 @@ COMMIT_MSG_PROMPT = (
     "generate a descriptive commit message from these code summaries:"
 )
 PROMPT_CUTOFF = 10000
-openai.organization = os.getenv("OPENAI_ORG_ID")
-openai.api_key = os.environ["OPENAI_API_KEY"]
-openai.api_base = os.environ["OPENAI_API_BASE"]
+
 
 def get_diff(ignore_whitespace=True):
     arguments = [
@@ -74,11 +77,10 @@ def assemble_diffs(parsed_diffs, cutoff):
 
 
 async def complete(prompt):
-    completion_resp = await openai.ChatCompletion.acreate(
-        model="gpt-4-turbo-preview",
-        messages=[{"role": "user", "content": prompt[: PROMPT_CUTOFF + 100]}],
-        max_tokens=128,
-    )
+    completion_resp = await openai_client.chat.completions.create(model=MODEL,
+                                                                  messages=[{"role": "user",
+                                                                             "content": prompt[: PROMPT_CUTOFF + 100]}],
+                                                                  max_tokens=128)
     completion = completion_resp.choices[0].message.content.strip()
     return completion
 
@@ -106,7 +108,7 @@ async def generate_commit_message(diff):
 
 def commit(message):
     # will ignore message if diff is empty
-    return subprocess.run(["git", "commit", "--message", message, "--edit"]).returncode
+    return subprocess.run(["git", "commit", "--message", message, "--edit", "-v", "-s"]).returncode
 
 
 def parse_args():
